@@ -231,7 +231,7 @@
             newRow.innerHTML = `
                 <td>${invoiceNumber}</td>
                 <td>${security}</td>
-                <td>${amount.toFixed(2)}</td>
+                <td>${Math.round(amount)}</td>
                 <td>${labId}</td>
             `;
             newRow.style.opacity = '0';
@@ -248,7 +248,7 @@
             document.getElementById('totalRow').innerHTML = `
                 <tr class="total-row">
                     <td colspan="2">Total Amount</td>
-                    <td>${totalAmount.toFixed(2)}</td>
+                    <td>${Math.round(totalAmount)}</td>
                     <td></td>
                 </tr>
             `;
