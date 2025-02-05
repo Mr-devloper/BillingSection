@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Management</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #4f46e5;
+            --bg: #f8fafc;
+            --text: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 900px;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        input, select {
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        button {
+            padding: 0.8rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: var(--secondary);
+        }
+
+        .table-container {
+            margin-top: 2rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        tfoot td {
+            background: var(--secondary);
+            color: white;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            input, select, button {
+                width: 100%;
+            }
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            
+            .container, .container * {
+                visibility: visible;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            table {
+                width: 100%!important;
+                font-size: 14pt;
+            }
+            
+            th {
+                background: #f8f9fa!important;
+                color: #000!important;
+                border-bottom: 2px solid #ddd;
+            }
+            
+            #grandTotal {
+                font-weight: bold!important;
+            }
+            
+            tfoot td {
+                background: transparent!important;
+                color: #000!important;
+                border-top: 2px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>NIGHTANGLE DIAGNOSTIC LAB</h2>
+
+        <div class="controls">
+            <input type="text" id="invoiceTitle" placeholder="Invoice Title" style="flex: 2;">
+            <button onclick="printInvoice()">
+                Print Invoice
+            </button>
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <select id="usgSelect">
+                    <option value="770">USG TVS/DOPP/ANOMALY/SCROTUM</option>
+                    <option value="560">USG BREAST/THYROID</option>
+                    <option value="380">USG KUB</option>
+                    <option value="450">USG W/A</option>
+                    <option value="350">USG L/A</option>
+                    <option value="700">USG NECK</option>
+                </select>
+
+                <input type="number" id="quantity" min="1" value="1" placeholder="Quantity">
+            </div>
+            <button onclick="addToTable()">
+                Add Item
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table id="invoiceTable">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">Grand Total</td>
+                        <td id="grandTotal">0</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function addToTable() {
+            const select = document.getElementById("usgSelect");
+            const quantity = document.getElementById("quantity");
+            const tableBody = document.getElementById("tableBody");
+            
+            const itemName = select.options[select.selectedIndex].text;
+            const unitPrice = parseInt(select.value);
+            const totalPrice = unitPrice * parseInt(quantity.value);
+
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td>${itemName}</td>
+                <td>${quantity.value}</td>
+                <td>${unitPrice}</td>
+                <td>${totalPrice}</td>
+            `;
+
+            tableBody.appendChild(newRow);
+            updateGrandTotal();
+            quantity.value = 1;
+        }
+
+        function updateGrandTotal() {
+            const rows = document.querySelectorAll("#tableBody tr");
+            let grandTotal = 0;
+
+            rows.forEach(row => {
+                const total = parseInt(row.cells[3].innerText);
+                grandTotal += total;
+            });
+
+            const grandTotalCell = document.getElementById("grandTotal");
+            grandTotalCell.innerText = grandTotal;
+        }
+
+        function printInvoice() {
+            const title = document.getElementById("invoiceTitle").value;
+            const printWindow = window.open('', '_blank');
+            
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Invoice - ${title}</title>
+                        <style>
+                            @media print {
+                                body {
+                                    font-family: Arial, sans-serif;
+                                    padding: 2cm;
+                                }
+                                h1 {
+                                    color: #000;
+                                    margin-bottom: 1rem;
+                                }
+                                table {
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                    margin-top: 1rem;
+                                }
+                                th, td {
+                                    padding: 12px;
+                                    text-align: left;
+                                    border-bottom: 1px solid #ddd;
+                                }
+                                th {
+                                    background-color: #f8f9fa;
+                                    font-weight: bold;
+                                }
+                                #grandTotal {
+                                    font-weight: bold;
+                                }
+                                tfoot tr {
+                                    border-top: 2px solid #000;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>NIGHTANGLE DIAGNOSTIC LAB</h1>
+                        ${title ? `<h2>${title}</h2>` : ''}
+                        ${document.getElementById("invoiceTable").outerHTML}
+                    </body>
+                </html>
+            `);
+
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && document.activeElement.id === 'quantity') {
+                addToTable();
+            }
+        });
+    </script>
+
+</body>
+</html>
