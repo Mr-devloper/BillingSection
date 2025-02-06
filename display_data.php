@@ -1,6 +1,10 @@
 
 <?php
 // Same database configuration as above
+$host = 'sql211.infinityfree.com';
+$dbname = 'if0_38090824_db_bill';
+$username = 'if0_38090824';
+$password = '4H1HfrNQQkCO';
 include 'db_config.php';
 
 try {
