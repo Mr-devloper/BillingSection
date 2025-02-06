@@ -134,62 +134,9 @@
             font-weight: bold;
         }
 
-        .print-header {
-            display: none;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .comment-section {
-            margin-top: 1.5rem;
-        }
-
-        .comment-box {
-            width: 100%;
-            padding: 5px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-            resize: vertical;
-            min-height: 40px;
-            resize: none;
-        }
-
-        .comment-box:focus {
-            outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(91, 164, 230, 0.2);
-        }
-
         @media print {
-            .print-header {
-                display: block;
-                color: var(--primary-color);
-                font-size: 24px;
-            }
-
             button, .form-section {
                 display: none;
-            }
-
-            .data-table {
-                box-shadow: none;
-                border: 1px solid #ddd;
-            }
-
-            .comment-box {
-                border: none;
-                padding: 0;
-                margin-top: 20px;
-                font-style: italic;
-                color: var(--primary-color);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .main-wrapper {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -222,9 +169,6 @@
             </div>
 
             <div class="table-section">
-                <div class="print-header">
-                    <h3>PATHOLOGY BILLINGS</h3>
-                </div>
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -239,9 +183,6 @@
                     <tfoot id="totalRow">
                     </tfoot>
                 </table>
-                <div class="comment-section">
-                    <textarea class="comment-box" placeholder="Write your comment here..."></textarea>
-                </div>
                 <div style="margin-top: 1.5rem;">
                     <button onclick="window.print()" style="background: #27ae60;">Print Report</button>
                 </div>
@@ -254,15 +195,13 @@
         const firebaseConfig = {
             apiKey: "AIzaSyB_TKTqU9DkMbcNn_nu1Qfor0hSpQOALxc",
             authDomain: "myprojec-597b9.firebaseapp.com",
-            databaseURL: "https://myprojec-597b9-default-rtdb.firebaseio.com",
             projectId: "myprojec-597b9",
-            storageBucket: "myprojec-597b9.firebasestorage.app",
+            storageBucket: "myprojec-597b9.appspot.com",
             messagingSenderId: "900659439226",
-            appId: "1:900659439226:web:0c72aadcd219935b73bdc3",
-            measurementId: "G-2S6B4YGYFX"
+            appId: "1:900659439226:web:0c72aadcd219935b73bdc3"
         };
 
-        // Firebase ইন্সট্যান্স ইন্সিয়ালাইজ করুন
+        // Firebase ইন্সট্যান্স
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
@@ -277,65 +216,27 @@
             const labId = document.getElementById('labId').value;
 
             try {
-                // Firestore-এ ডেটা সেভ করুন
                 await db.collection("invoices").add({
-                    invoiceNumber: invoiceNumber,
-                    security: security,
+                    invoiceNumber,
+                    security,
                     amount: Math.round(amount),
-                    labId: labId,
+                    labId,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                // টেবিলে ডেটা যোগ করুন
                 const tableBody = document.getElementById('tableBody');
                 const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${invoiceNumber}</td>
-                    <td>${security}</td>
-                    <td>${Math.round(amount)}</td>
-                    <td>${labId}</td>
-                `;
-                newRow.style.opacity = '0';
+                newRow.innerHTML = `<td>${invoiceNumber}</td><td>${security}</td><td>${Math.round(amount)}</td><td>${labId}</td>`;
                 tableBody.appendChild(newRow);
 
-                // এনিমেশন যোগ করুন
-                setTimeout(() => {
-                    newRow.style.transition = 'opacity 0.3s ease';
-                    newRow.style.opacity = '1';
-                }, 10);
-
-                // টোটাল আপডেট করুন
                 totalAmount += amount;
-                document.getElementById('totalRow').innerHTML = `
-                    <tr class="total-row">
-                        <td colspan="2">Total Amount</td>
-                        <td>${Math.round(totalAmount)}</td>
-                        <td></td>
-                    </tr>
-                `;
+                document.getElementById('totalRow').innerHTML = `<tr class="total-row"><td colspan="2">Total Amount</td><td>${Math.round(totalAmount)}</td><td></td></tr>`;
 
-                // ফর্ম রিসেট করুন
                 document.getElementById('invoiceForm').reset();
-                document.getElementById('invoiceNumber').focus();
-
             } catch (error) {
-                console.error("Error saving data: ", error);
                 alert("ডেটা সেভ করতে সমস্যা হয়েছে!");
             }
         });
-
-        // রিয়েল-টাইম ডেটা ফেচ করুন
-      
-
-                // টোটাল আপডেট করুন
-                document.getElementById('totalRow').innerHTML = `
-                    <tr class="total-row">
-                        <td colspan="2">Total Amount</td>
-                        <td>${Math.round(totalAmount)}</td>
-                        <td></td>
-                    </tr>
-                `;
-            });
     </script>
 </body>
 </html>
