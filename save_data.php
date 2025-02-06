@@ -1,10 +1,10 @@
 
 <?php
 // Database configuration for InfinityFree
-$host = 'sqlXXX.epizy.com';
-$dbname = 'epiz_XXXXXX_dbname';
-$username = 'epiz_XXXXXX';
-$password = 'your_password';
+$host = 'sql211.infinityfree.com';
+$dbname = 'if0_38090824_db_bill';
+$username = 'if0_38090824';
+$password = '4H1HfrNQQkCO';
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
