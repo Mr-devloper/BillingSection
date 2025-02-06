@@ -325,26 +325,7 @@
         });
 
         // রিয়েল-টাইম ডেটা ফেচ করুন
-        db.collection("invoices")
-            .orderBy("timestamp", "desc")
-            .onSnapshot((snapshot) => {
-                const tableBody = document.getElementById('tableBody');
-                tableBody.innerHTML = '';
-                totalAmount = 0;
-
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    totalAmount += data.amount;
-
-                    const newRow = document.createElement('tr');
-                    newRow.innerHTML = `
-                        <td>${data.invoiceNumber}</td>
-                        <td>${data.security}</td>
-                        <td>${data.amount}</td>
-                        <td>${data.labId}</td>
-                    `;
-                    tableBody.appendChild(newRow);
-                });
+      
 
                 // টোটাল আপডেট করুন
                 document.getElementById('totalRow').innerHTML = `
