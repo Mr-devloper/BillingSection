@@ -1,1 +1,52 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View All Data</title>
+    <style>
+        /* আপনার CSS স্টাইল এখানে যোগ করুন */
+    </style>
+</head>
+<body>
+    <h1>All Records</h1>
+    <table id="dataTable">
+        <!-- ডেটা অটোমেটিকভাবে লোড হবে -->
+    </table>
+
+    <script>
+        // Firebase ইন্সট্যান্স এবং Firestore রেফারেন্স
+        const db = firebase.firestore();
+
+        // ডেটা ফেচ করুন
+        db.collection("invoices")
+            .orderBy("timestamp", "desc")
+            .onSnapshot((snapshot) => {
+                const table = document.getElementById('dataTable');
+                table.innerHTML = `
+                    <tr>
+                        <th>Invoice No</th>
+                        <th>Security</th>
+                        <th>Amount</th>
+                        <th>Lab ID</th>
+                        <th>Date</th>
+                    </tr>
+                `;
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const date = data.timestamp?.toDate().toLocaleString();
+                    
+                    table.innerHTML += `
+                        <tr>
+                            <td>${data.invoiceNumber}</td>
+                            <td>${data.security}</td>
+                            <td>${data.amount}</td>
+                            <td>${data.labId}</td>
+                            <td>${date}</td>
+                        </tr>
+                    `;
+                });
+            });
+    </script>
+</body>
+</html>
