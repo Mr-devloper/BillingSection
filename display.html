@@ -1,42 +1,90 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View All Data</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <style>
-        /* আপনার CSS স্টাইল এখানে যোগ করুন */
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #2A5C82;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #2A5C82;
+            color: white;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
     </style>
 </head>
 <body>
     <h1>All Records</h1>
     <table id="dataTable">
-        <!-- ডেটা অটোমেটিকভাবে লোড হবে -->
+        <thead>
+            <tr>
+                <th>Invoice No</th>
+                <th>Security</th>
+                <th>Amount</th>
+                <th>Lab ID</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- ডেটা অটোমেটিকভাবে লোড হবে -->
+        </tbody>
     </table>
 
     <script>
-        // Firebase ইন্সট্যান্স এবং Firestore রেফারেন্স
+        // Firebase কনফিগারেশন
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_TKTqU9DkMbcNn_nu1Qfor0hSpQOALxc",
+            authDomain: "myprojec-597b9.firebaseapp.com",
+            databaseURL: "https://myprojec-597b9-default-rtdb.firebaseio.com",
+            projectId: "myprojec-597b9",
+            storageBucket: "myprojec-597b9.firebasestorage.app",
+            messagingSenderId: "900659439226",
+            appId: "1:900659439226:web:0c72aadcd219935b73bdc3",
+            measurementId: "G-2S6B4YGYFX"
+        };
+
+        // Firebase ইন্সট্যান্স ইন্সিয়ালাইজ করুন
+        const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
         // ডেটা ফেচ করুন
         db.collection("invoices")
             .orderBy("timestamp", "desc")
             .onSnapshot((snapshot) => {
-                const table = document.getElementById('dataTable');
-                table.innerHTML = `
-                    <tr>
-                        <th>Invoice No</th>
-                        <th>Security</th>
-                        <th>Amount</th>
-                        <th>Lab ID</th>
-                        <th>Date</th>
-                    </tr>
-                `;
+                const table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+                table.innerHTML = ''; // পুরানো ডেটা ক্লিয়ার করুন
 
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    const date = data.timestamp?.toDate().toLocaleString();
-                    
-                    table.innerHTML += `
+                    const date = data.timestamp?.toDate().toLocaleString(); // টাইমস্ট্যাম্প ফরম্যাট করুন
+
+                    const row = `
                         <tr>
                             <td>${data.invoiceNumber}</td>
                             <td>${data.security}</td>
@@ -45,6 +93,7 @@
                             <td>${date}</td>
                         </tr>
                     `;
+                    table.innerHTML += row;
                 });
             });
     </script>
