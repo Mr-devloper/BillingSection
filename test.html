@@ -233,6 +233,7 @@
                 document.getElementById('totalRow').innerHTML = `<tr class="total-row"><td colspan="2">Total Amount</td><td>${Math.round(totalAmount)}</td><td></td></tr>`;
 
                 document.getElementById('invoiceForm').reset();
+                document.getElementById('invoiceNumber').focus();
             } catch (error) {
                 alert("ডেটা সেভ করতে সমস্যা হয়েছে!");
             }
