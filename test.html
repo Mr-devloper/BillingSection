@@ -134,11 +134,35 @@
             font-weight: bold;
         }
 
-        @media print {
-            button, .form-section {
-                display: none;
+                 @media print { 
+             .print-header { 
+                 display: block; 
+                 color: var(--primary-color); 
+                 font-size: 24px; 
+             } 
+  
+             button, .form-section { 
+                 display: none; 
+             } 
+  
+             .data-table { 
+                 box-shadow: none; 
+                 border: 1px solid #ddd; 
+             } 
+             .comment-box {
+                border: none;
+                padding: 0;
+                margin-top: 20px;
+                font-style: italic;
+                color: var(--primary-color);
             }
-        }
+         } 
+  
+         @media (max-width: 768px) { 
+             .main-wrapper { 
+                 grid-template-columns: 1fr; 
+             } 
+         } 
     </style>
 </head>
 <body>
