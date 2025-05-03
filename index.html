@@ -156,7 +156,7 @@
 
         @media (max-width: 768px) {
             .container {
-                padding: 1.5rem;
+                padding: 1rem;
             }
             
             .controls {
@@ -172,82 +172,75 @@
             }
 
             .qty-input {
-                width: 100%;
+                width: 50%;
             }
         }
 
         @media print {
-            body * {
-                visibility: hidden;
+            @page {
+               size: A5;
             }
             
-            .container, .container * {
-                visibility: visible;
+            body {
+                padding: 1cm 1rem 1rem !important;
+                margin: 0 !important;
+                min-height: auto !important;
+                background: white !important;
             }
             
             .container {
                 box-shadow: none;
-                padding: 0;
-                margin: 0;
+                padding: 0 !important;
+                margin:0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                border-radius: 0 !important;
             }
             
-            table {
-                width: 100%!important;
-                font-size: 14pt;
-            }
-            
-            th {
-                background: #f8f9fa!important;
-                color: #000!important;
-                border-bottom: 2px solid #ddd;
-            }
-
             .qty-input {
-                border: none!important;
-                background: transparent!important;
-                -webkit-appearance: none!important;
-                -moz-appearance: textfield!important;
-                appearance: none!important;
-                padding: 0!important;
-                width: auto!important;
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+                width: auto !important;
+                -webkit-appearance: none;
+                -moz-appearance: textfield;
+                appearance: none;
             }
-
+            
             .delete-btn {
-                display: none!important;
+                display: none !important;
             }
-
+            
+            .controls,
+            button {
+                display: none !important;
+            }
+            
             tfoot td {
-                background: transparent!important;
-                color: #000!important;
-                border-top: 2px solid #ddd;
+                background: transparent !important;
+                color: #000 !important;
+                border-top: 2px solid #000;
             }
-
-            button:not(.delete-btn) {
-                display: none!important;
-            }
-
-            select {
-                border: none!important;
-                padding: 0!important;
+            
+            th:last-child,
+            td:last-child {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h2>NIGHTANGLE DIAGNOSTIC LAB [BETA]</h2>
 
         <div class="controls">
             <select id="invoiceTitle">
-                <option value="DR.GOURUB MITRA.MBBS.BCS.MD (C). (Radiology & Imaging)   ">DR.GOURAB MITRA</option>
-                <option value="DR.MEGHLA MAJUMDER.MBBS.DMRD (C).PGT (Radiology & Imaging)   ">DR.MEGHLA MAJUMDER </option>
-                <option value="DR.QUASAR IQBAL CHY.MBBS.DMU.PGT (Medicine)   ">DR.QUASAR IQBAL</option>
-                <option value="DR.PRAGGA DEVI.MBBS.CMU (Ultra).DMU (Ultra)   ">DR.PRAGGA DEVI</option>
+                <option value="DR.GOURUB MITRA.MBBS.BCS.MD (C). (Radiology & Imaging)">DR.GOURAB MITRA</option>
+                <option value="DR.MEGHLA MAJUMDER.MBBS.DMRD (C).PGT (Radiology & Imaging)">DR.MEGHLA MAJUMDER</option>
+                <option value="DR.QUASAR IQBAL CHY.MBBS.DMU.PGT (Medicine)">DR.QUASAR IQBAL</option>
+                <option value="DR.PRAGGA DEVI.MBBS.CMU (Ultra).DMU (Ultra)">DR.PRAGGA DEVI</option>
             </select>
-            <button onclick="printInvoice()">
-                Print Invoice
-            </button>
+            <button onclick="printInvoice()">Print Invoice</button>
         </div>
 
         <div class="controls">
@@ -260,16 +253,13 @@
                     <option value="420">USG HBS</option>
                     <option value="350">USG Lower Abdomen</option>
                     <option value="700">USG NECK</option>
-                    <option value="560">USG Whole Abdomen (1600) </option>
-                    <option value="450">USG KUB (1300) </option>
-                    <option value="870">DUPLEX STUDY OF LOWER LIMB </option>
+                    <option value="560">USG Whole Abdomen (1600)</option>
+                    <option value="450">USG KUB (1300)</option>
+                    <option value="870">DUPLEX STUDY OF LOWER LIMB</option>
                 </select>
-
                 <input type="number" id="quantity" min="1" value="1" placeholder="Quantity">
             </div>
-            <button onclick="addToTable()">
-                Add Item
-            </button>
+            <button onclick="addToTable()">Add Item</button>
         </div>
 
         <div class="table-container">
@@ -283,8 +273,7 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody">
-                </tbody>
+                <tbody id="tableBody"></tbody>
                 <tfoot>
                     <tr>
                         <td colspan="2">Total Quantity: <span id="totalQty">0</span></td>
@@ -368,45 +357,52 @@
                     <head>
                         <title>Invoice - ${title}</title>
                         <style>
-                            @media print {
-                                body {
-                                    font-family: Arial, sans-serif;
-                                    padding: 2cm;
-                                }
-                                h1 {
-                                    color: #000;
-                                    margin-bottom: 1rem;
-                                }
-                                table {
-                                    width: 100%;
-                                    border-collapse: collapse;
-                                    margin-top: 1rem;
-                                }
-                                th, td {
-                                    padding: 12px;
-                                    text-align: left;
-                                    border-bottom: 1px solid #ddd;
-                                }
-                                th {
-                                    background-color: #f8f9fa;
-                                    font-weight: bold;
-                                }
-                                .qty-input {
-                                    border: none!important;
-                                    background: transparent!important;
-                                }
-                                .delete-btn {
-                                    display: none!important;
-                                }
-                                tfoot td {
-                                    font-weight: bold;
-                                }
+                            @page {
+                                size: A5;
+                                margin-top: 2.5cm;
+                            }
+                            body {
+                                font-family: Arial, sans-serif;
+                                padding: 3.5cm 1rem 1rem !important;
+                                margin: 0 !important;
+                            }
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                font-size: 12pt;
+                            }
+                            th, td {
+                                padding: 8px;
+                                text-align: left;
+                                border-bottom: 1px solid #ddd;
+                            }
+                            th {
+                                background-color: #f8f9fa !important;
+                                color: #000 !important;
+                            }
+                            tfoot td {
+                                border-top: 2px solid #000;
+                            }
+                            input.qty-input {
+                                border: none !important;
+                                background: transparent !important;
+                                padding: 0 !important;
+                            }
+                            th:last-child {
+                                display: none;
+                            }
+                            .delete-btn{
+                             display: none;
                             }
                         </style>
                     </head>
                     <body>
-                        <h1>NIGHTANGLE DIAGNOSTIC LAB</h1>
-                        ${title ? `<h2>${title}</h2>` : ''}
+                        <h2 style="position: fixed; top: 1cm; left: 0; right: 0; text-align: center; margin: 0;">
+                            NIGHTANGLE DIAGNOSTIC LAB
+                        </h2>
+                        <h3 style="position: fixed; top: 2cm; left: 0; right: 0; text-align: center; margin: 0;">
+                            ${title}
+                        </h3>
                         ${document.getElementById("invoiceTable").outerHTML}
                     </body>
                 </html>
@@ -422,6 +418,5 @@
             }
         });
     </script>
-
 </body>
 </html>
