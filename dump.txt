@@ -1,10 +1,9 @@
-//dumped_file
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Management</title>
+    <title>Ultrasound Invoice</title>
     <style>
         :root {
             --primary: #6366f1;
@@ -199,7 +198,13 @@
         <h2>NIGHTANGLE DIAGNOSTIC LAB</h2>
 
         <div class="controls">
-            <input type="text" id="invoiceTitle" placeholder="Doctor's Name" style="flex: 2;">
+            
+                            <select id="invoiceTitle">
+                    <option value="DR.GOURUB MITRA.MBBS.BCS.MD (C). (Radiology & Imaging)   ">DR.GOURAB MITRA</option>
+                    <option value="DR.MEGHLA MAJUMDER.MBBS.DMRD (C).PGT (Radiology & Imaging)   ">DR.MEGHLA MAJUMDER </option>
+                    <option value="DR.QUASAR IQBAL CHY.MBBS.DMU.PGT (Medicine)   ">DR.QUASAR IQBAL</option>
+                    <option value="DR.PRAGGA DEVI.MBBS.CMU (Ultra).DMU (Ultra)   ">DR.PRAGGA DEVI</option>
+                </select>
             <button onclick="printInvoice()">
                 Print Invoice
             </button>
@@ -211,9 +216,13 @@
                     <option value="770">USG TVS/DOPPLER/ANOMALY/SCROTUM</option>
                     <option value="560">USG BREAST/THYROID</option>
                     <option value="380">USG KUB</option>
-                    <option value="450">USG W/A</option>
-                    <option value="350">USG L/A</option>
+                    <option value="450">USG Whole Abdomen</option>
+                    <option value="420">USG HBS</option>
+                    <option value="350">USG Lower Abdomen</option>
                     <option value="700">USG NECK</option>
+                    <option value="560">USG Whole Abdomen (1600) </option>
+                    <option value="450">USG KUB (1300) </option>
+                    <option value="870">DUPLEX STUDY OF LOWER LIMB </option>
                 </select>
 
                 <input type="number" id="quantity" min="1" value="1" placeholder="Quantity">
