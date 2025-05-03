@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultrasound Invoice</title>
+    <title>Ultrasound Invoice (BETA)</title>
     <style>
         :root {
             --primary: #6366f1;
             --secondary: #4f46e5;
             --bg: #f8fafc;
             --text: #1e293b;
+            --danger: #dc2626;
         }
 
         * {
@@ -136,9 +137,26 @@
             font-weight: bold;
         }
 
+        .qty-input {
+            width: 70px;
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.3rem;
+            font-size: 1rem;
+        }
+
+        .delete-btn {
+            background: var(--danger);
+            padding: 0.5rem 1rem;
+        }
+
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+
         @media (max-width: 768px) {
             .container {
-                padding: 1.5rem;
+                padding: 1rem;
             }
             
             .controls {
@@ -152,62 +170,77 @@
             input, select, button {
                 width: 100%;
             }
+
+            .qty-input {
+                width: 50%;
+            }
         }
 
         @media print {
-            body * {
-                visibility: hidden;
+            @page {
+               size: A5;
             }
             
-            .container, .container * {
-                visibility: visible;
+            body {
+                padding: 1cm 1rem 1rem !important;
+                margin: 0 !important;
+                min-height: auto !important;
+                background: white !important;
             }
             
             .container {
                 box-shadow: none;
-                padding: 0;
-                margin: 0;
+                padding: 0 !important;
+                margin:0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                border-radius: 0 !important;
             }
             
-            table {
-                width: 100%!important;
-                font-size: 14pt;
+            .qty-input {
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+                width: auto !important;
+                -webkit-appearance: none;
+                -moz-appearance: textfield;
+                appearance: none;
             }
             
-            th {
-                background: #f8f9fa!important;
-                color: #000!important;
-                border-bottom: 2px solid #ddd;
+            .delete-btn {
+                display: none !important;
             }
             
-            #grandTotal {
-                font-weight: bold!important;
+            .controls,
+            button {
+                display: none !important;
             }
             
             tfoot td {
-                background: transparent!important;
-                color: #000!important;
-                border-top: 2px solid #ddd;
+                background: transparent !important;
+                color: #000 !important;
+                border-top: 2px solid #000;
+            }
+            
+            th:last-child,
+            td:last-child {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h2>NIGHTANGLE DIAGNOSTIC LAB</h2>
+        <h2>NIGHTANGLE DIAGNOSTIC LAB [BETA]</h2>
 
         <div class="controls">
-            
-                            <select id="invoiceTitle">
-                    <option value="DR.GOURUB MITRA.MBBS.BCS.MD (C). (Radiology & Imaging)   ">DR.GOURAB MITRA</option>
-                    <option value="DR.MEGHLA MAJUMDER.MBBS.DMRD (C).PGT (Radiology & Imaging)   ">DR.MEGHLA MAJUMDER </option>
-                    <option value="DR.QUASAR IQBAL CHY.MBBS.DMU.PGT (Medicine)   ">DR.QUASAR IQBAL</option>
-                    <option value="DR.PRAGGA DEVI.MBBS.CMU (Ultra).DMU (Ultra)   ">DR.PRAGGA DEVI</option>
-                </select>
-            <button onclick="printInvoice()">
-                Print Invoice
-            </button>
+            <select id="invoiceTitle">
+                <option value="DR.GOURUB MITRA.MBBS.BCS.MD (C). (Radiology & Imaging)">DR.GOURAB MITRA</option>
+                <option value="DR.MEGHLA MAJUMDER.MBBS.DMRD (C).PGT (Radiology & Imaging)">DR.MEGHLA MAJUMDER</option>
+                <option value="DR.QUASAR IQBAL CHY.MBBS.DMU.PGT (Medicine)">DR.QUASAR IQBAL</option>
+                <option value="DR.PRAGGA DEVI.MBBS.CMU (Ultra).DMU (Ultra)">DR.PRAGGA DEVI</option>
+            </select>
+            <button onclick="printInvoice()">Print Invoice</button>
         </div>
 
         <div class="controls">
@@ -220,16 +253,13 @@
                     <option value="420">USG HBS</option>
                     <option value="350">USG Lower Abdomen</option>
                     <option value="700">USG NECK</option>
-                    <option value="560">USG Whole Abdomen (1600) </option>
-                    <option value="450">USG KUB (1300) </option>
-                    <option value="870">DUPLEX STUDY OF LOWER LIMB </option>
+                    <option value="560">USG Whole Abdomen (1600)</option>
+                    <option value="450">USG KUB (1300)</option>
+                    <option value="870">DUPLEX STUDY OF LOWER LIMB</option>
                 </select>
-
                 <input type="number" id="quantity" min="1" value="1" placeholder="Quantity">
             </div>
-            <button onclick="addToTable()">
-                Add Item
-            </button>
+            <button onclick="addToTable()">Add Item</button>
         </div>
 
         <div class="table-container">
@@ -240,14 +270,14 @@
                         <th>Qty</th>
                         <th>Unit Price</th>
                         <th>Total</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody">
-                </tbody>
+                <tbody id="tableBody"></tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="3">Grand Total</td>
-                        <td id="grandTotal">0</td>
+                        <td colspan="2">Total Quantity: <span id="totalQty">0</span></td>
+                        <td colspan="3">Grand Total: <span id="grandTotal">0</span></td>
                     </tr>
                 </tfoot>
             </table>
@@ -262,14 +292,24 @@
             
             const itemName = select.options[select.selectedIndex].text;
             const unitPrice = parseInt(select.value);
-            const totalPrice = unitPrice * parseInt(quantity.value);
+            const initialQty = parseInt(quantity.value) || 1;
+            const totalPrice = unitPrice * initialQty;
 
             const newRow = document.createElement("tr");
             newRow.innerHTML = `
                 <td>${itemName}</td>
-                <td>${quantity.value}</td>
+                <td>
+                    <input type="number" min="1" value="${initialQty}" 
+                        class="qty-input" 
+                        onchange="updateRowTotal(this)">
+                </td>
                 <td>${unitPrice}</td>
                 <td>${totalPrice}</td>
+                <td>
+                    <button class="delete-btn" onclick="deleteRow(this)">
+                        Delete
+                    </button>
+                </td>
             `;
 
             tableBody.appendChild(newRow);
@@ -277,17 +317,35 @@
             quantity.value = 1;
         }
 
+        function updateRowTotal(input) {
+            const row = input.closest('tr');
+            const unitPrice = parseInt(row.cells[2].textContent);
+            const newQty = parseInt(input.value) || 1;
+            const totalCell = row.cells[3];
+            totalCell.textContent = unitPrice * newQty;
+            updateGrandTotal();
+        }
+
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+            updateGrandTotal();
+        }
+
         function updateGrandTotal() {
             const rows = document.querySelectorAll("#tableBody tr");
             let grandTotal = 0;
+            let totalQty = 0;
 
             rows.forEach(row => {
-                const total = parseInt(row.cells[3].innerText);
+                const qtyInput = row.querySelector('.qty-input');
+                const total = parseInt(row.cells[3].textContent);
+                totalQty += parseInt(qtyInput.value) || 0;
                 grandTotal += total;
             });
 
-            const grandTotalCell = document.getElementById("grandTotal");
-            grandTotalCell.innerText = grandTotal;
+            document.getElementById("grandTotal").textContent = grandTotal;
+            document.getElementById("totalQty").textContent = totalQty;
         }
 
         function printInvoice() {
@@ -299,41 +357,52 @@
                     <head>
                         <title>Invoice - ${title}</title>
                         <style>
-                            @media print {
-                                body {
-                                    font-family: Arial, sans-serif;
-                                    padding: 2cm;
-                                }
-                                h1 {
-                                    color: #000;
-                                    margin-bottom: 1rem;
-                                }
-                                table {
-                                    width: 100%;
-                                    border-collapse: collapse;
-                                    margin-top: 1rem;
-                                }
-                                th, td {
-                                    padding: 12px;
-                                    text-align: left;
-                                    border-bottom: 1px solid #ddd;
-                                }
-                                th {
-                                    background-color: #f8f9fa;
-                                    font-weight: bold;
-                                }
-                                #grandTotal {
-                                    font-weight: bold;
-                                }
-                                tfoot tr {
-                                    border-top: 2px solid #000;
-                                }
+                            @page {
+                                size: A5;
+                                margin-top: 2.5cm;
+                            }
+                            body {
+                                font-family: Arial, sans-serif;
+                                padding: 3.5cm 1rem 1rem !important;
+                                margin: 0 !important;
+                            }
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                font-size: 12pt;
+                            }
+                            th, td {
+                                padding: 8px;
+                                text-align: left;
+                                border-bottom: 1px solid #ddd;
+                            }
+                            th {
+                                background-color: #f8f9fa !important;
+                                color: #000 !important;
+                            }
+                            tfoot td {
+                                border-top: 2px solid #000;
+                            }
+                            input.qty-input {
+                                border: none !important;
+                                background: transparent !important;
+                                padding: 0 !important;
+                            }
+                            th:last-child {
+                                display: none;
+                            }
+                            .delete-btn{
+                             display: none;
                             }
                         </style>
                     </head>
                     <body>
-                        <h1>NIGHTANGLE DIAGNOSTIC LAB</h1>
-                        ${title ? `<h2>${title}</h2>` : ''}
+                        <h2 style="position: fixed; top: 1cm; left: 0; right: 0; text-align: center; margin: 0;">
+                            NIGHTANGLE DIAGNOSTIC LAB
+                        </h2>
+                        <h3 style="position: fixed; top: 2cm; left: 0; right: 0; text-align: center; margin: 0;">
+                            ${title}
+                        </h3>
                         ${document.getElementById("invoiceTable").outerHTML}
                     </body>
                 </html>
@@ -349,6 +418,5 @@
             }
         });
     </script>
-
 </body>
 </html>
