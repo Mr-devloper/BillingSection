@@ -10,6 +10,7 @@
             --secondary: #4f46e5;
             --bg: #f8fafc;
             --text: #1e293b;
+            --danger: #dc2626;
         }
 
         * {
@@ -136,6 +137,23 @@
             font-weight: bold;
         }
 
+        .qty-input {
+            width: 70px;
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.3rem;
+            font-size: 1rem;
+        }
+
+        .delete-btn {
+            background: var(--danger);
+            padding: 0.5rem 1rem;
+        }
+
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1.5rem;
@@ -150,6 +168,10 @@
             }
             
             input, select, button {
+                width: 100%;
+            }
+
+            .qty-input {
                 width: 100%;
             }
         }
@@ -179,15 +201,34 @@
                 color: #000!important;
                 border-bottom: 2px solid #ddd;
             }
-            
-            #grandTotal {
-                font-weight: bold!important;
+
+            .qty-input {
+                border: none!important;
+                background: transparent!important;
+                -webkit-appearance: none!important;
+                -moz-appearance: textfield!important;
+                appearance: none!important;
+                padding: 0!important;
+                width: auto!important;
             }
-            
+
+            .delete-btn {
+                display: none!important;
+            }
+
             tfoot td {
                 background: transparent!important;
                 color: #000!important;
                 border-top: 2px solid #ddd;
+            }
+
+            button:not(.delete-btn) {
+                display: none!important;
+            }
+
+            select {
+                border: none!important;
+                padding: 0!important;
             }
         }
     </style>
@@ -198,13 +239,12 @@
         <h2>NIGHTANGLE DIAGNOSTIC LAB [BETA]</h2>
 
         <div class="controls">
-            
-                            <select id="invoiceTitle">
-                    <option value="DR.GOURUB MITRA.MBBS.BCS.MD (C). (Radiology & Imaging)   ">DR.GOURAB MITRA</option>
-                    <option value="DR.MEGHLA MAJUMDER.MBBS.DMRD (C).PGT (Radiology & Imaging)   ">DR.MEGHLA MAJUMDER </option>
-                    <option value="DR.QUASAR IQBAL CHY.MBBS.DMU.PGT (Medicine)   ">DR.QUASAR IQBAL</option>
-                    <option value="DR.PRAGGA DEVI.MBBS.CMU (Ultra).DMU (Ultra)   ">DR.PRAGGA DEVI</option>
-                </select>
+            <select id="invoiceTitle">
+                <option value="DR.GOURUB MITRA.MBBS.BCS.MD (C). (Radiology & Imaging)   ">DR.GOURAB MITRA</option>
+                <option value="DR.MEGHLA MAJUMDER.MBBS.DMRD (C).PGT (Radiology & Imaging)   ">DR.MEGHLA MAJUMDER </option>
+                <option value="DR.QUASAR IQBAL CHY.MBBS.DMU.PGT (Medicine)   ">DR.QUASAR IQBAL</option>
+                <option value="DR.PRAGGA DEVI.MBBS.CMU (Ultra).DMU (Ultra)   ">DR.PRAGGA DEVI</option>
+            </select>
             <button onclick="printInvoice()">
                 Print Invoice
             </button>
@@ -240,14 +280,15 @@
                         <th>Qty</th>
                         <th>Unit Price</th>
                         <th>Total</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="3">Grand Total</td>
-                        <td id="grandTotal">0</td>
+                        <td colspan="2">Total Quantity: <span id="totalQty">0</span></td>
+                        <td colspan="3">Grand Total: <span id="grandTotal">0</span></td>
                     </tr>
                 </tfoot>
             </table>
@@ -262,14 +303,24 @@
             
             const itemName = select.options[select.selectedIndex].text;
             const unitPrice = parseInt(select.value);
-            const totalPrice = unitPrice * parseInt(quantity.value);
+            const initialQty = parseInt(quantity.value) || 1;
+            const totalPrice = unitPrice * initialQty;
 
             const newRow = document.createElement("tr");
             newRow.innerHTML = `
                 <td>${itemName}</td>
-                <td>${quantity.value}</td>
+                <td>
+                    <input type="number" min="1" value="${initialQty}" 
+                        class="qty-input" 
+                        onchange="updateRowTotal(this)">
+                </td>
                 <td>${unitPrice}</td>
                 <td>${totalPrice}</td>
+                <td>
+                    <button class="delete-btn" onclick="deleteRow(this)">
+                        Delete
+                    </button>
+                </td>
             `;
 
             tableBody.appendChild(newRow);
@@ -277,17 +328,35 @@
             quantity.value = 1;
         }
 
+        function updateRowTotal(input) {
+            const row = input.closest('tr');
+            const unitPrice = parseInt(row.cells[2].textContent);
+            const newQty = parseInt(input.value) || 1;
+            const totalCell = row.cells[3];
+            totalCell.textContent = unitPrice * newQty;
+            updateGrandTotal();
+        }
+
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+            updateGrandTotal();
+        }
+
         function updateGrandTotal() {
             const rows = document.querySelectorAll("#tableBody tr");
             let grandTotal = 0;
+            let totalQty = 0;
 
             rows.forEach(row => {
-                const total = parseInt(row.cells[3].innerText);
+                const qtyInput = row.querySelector('.qty-input');
+                const total = parseInt(row.cells[3].textContent);
+                totalQty += parseInt(qtyInput.value) || 0;
                 grandTotal += total;
             });
 
-            const grandTotalCell = document.getElementById("grandTotal");
-            grandTotalCell.innerText = grandTotal;
+            document.getElementById("grandTotal").textContent = grandTotal;
+            document.getElementById("totalQty").textContent = totalQty;
         }
 
         function printInvoice() {
@@ -322,11 +391,15 @@
                                     background-color: #f8f9fa;
                                     font-weight: bold;
                                 }
-                                #grandTotal {
-                                    font-weight: bold;
+                                .qty-input {
+                                    border: none!important;
+                                    background: transparent!important;
                                 }
-                                tfoot tr {
-                                    border-top: 2px solid #000;
+                                .delete-btn {
+                                    display: none!important;
+                                }
+                                tfoot td {
+                                    font-weight: bold;
                                 }
                             }
                         </style>
