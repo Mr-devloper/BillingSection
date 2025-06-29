@@ -3,265 +3,1162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nightingale Diagnostic Lab</title>
+    <title>Doctor Consultation Billing System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #2A5C82;
-            --secondary-color: #5BA4E6;
-            --background: #f8f9fa;
-            --text-color: #2c3e50;
+            --primary: #2563eb;
+            --secondary: #1d4ed8;
+            --accent: #4338ca;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --danger: #dc2626;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --gray: #e2e8f0;
+            --text: #1e293b;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
         body {
-            background: var(--background);
-            color: var(--text-color);
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 20px;
+            background: white;
+            width: 100%;
+            max-width: 1000px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            margin-top: 2rem;
+            position: relative;
+            border-top: 5px solid var(--primary);
         }
 
         .header {
-            text-align: center;
-            padding: 2rem 0;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--gray);
         }
 
-        .main-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 2rem;
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        .header-content {
+            flex: 1;
         }
 
-        .form-section {
-            padding: 1.5rem;
-            background: #f8f9fa;
-            border-radius: 8px;
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
         }
 
-        .form-title {
+        .header p {
+            color: var(--dark);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--light);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .logo i {
+            color: var(--secondary);
+            font-size: 2.5rem;
+        }
+
+        .logo-text {
+            font-weight: bold;
             font-size: 1.5rem;
+            color: var(--dark);
+        }
+
+        .info-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .info-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .info-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        input, select, textarea {
+            padding: 0.8rem 1.2rem;
+            border: 2px solid var(--gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
             margin-bottom: 1.5rem;
-            color: var(--primary-color);
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
         }
 
         .input-group {
-            margin-bottom: 1.5rem;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(91, 164, 230, 0.2);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         button {
-            background: var(--primary-color);
+            padding: 0.8rem 1.5rem;
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            font-size: 16px;
-            transition: transform 0.2s, background 0.3s;
-            width: 100%;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
         }
 
         button:hover {
-            background: var(--secondary-color);
-            transform: translateY(-1px);
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.1);
         }
 
-        .table-section {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
+        .btn-danger {
+            background: var(--danger);
         }
 
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        .btn-danger:hover {
+            background: #b91c1c;
         }
 
-        .data-table thead {
-            background: var(--primary-color);
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
             color: white;
         }
 
-        .data-table th,
-        .data-table td {
-            padding: 15px;
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .table-container {
+            margin-top: 2rem;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #eee;
         }
 
-        .data-table tr:hover {
-            background: #f8f9fa;
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
         }
 
-        .total-row {
-            background: #f8f9fa;
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        tfoot td {
+            background: var(--secondary);
+            color: white;
             font-weight: bold;
         }
 
-        .print-header {
-            display: none;
-            text-align: center;
-            margin-bottom: 2rem;
+        .qty-input {
+            width: 70px;
+            padding: 0.5rem;
+            border: 1px solid var(--gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
         }
 
-        @media print {
-            .print-header {
-                display: block;
-                color: var(--primary-color);
-                font-size: 24px;
-            }
-            
-            button, .form-section {
-                display: none;
-            }
-            
-            .data-table {
-                box-shadow: none;
-                border: 1px solid #ddd;
-            }
+        .action-btn {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn button {
+            padding: 0.5rem;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            background: var(--light);
+            border: 1px solid var(--gray);
+            border-bottom: none;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            margin-right: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            background: #e0f2fe;
+        }
+
+        .tab.active {
+            background: white;
+            border-color: var(--gray);
+            position: relative;
+            top: 1px;
+            font-weight: 600;
+            color: var(--primary);
+            border-top: 3px solid var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .doctor-list, .service-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            border: 1px solid var(--gray);
+            border-radius: var(--border-radius);
+        }
+
+        .doctor-item, .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--gray);
+            background: white;
+        }
+
+        .doctor-item:last-child, .service-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .item-actions button {
+            padding: 0.4rem 0.75rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            background: var(--success);
+            color: white;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: var(--danger);
         }
 
         @media (max-width: 768px) {
-            .main-wrapper {
+            body {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .controls, .footer {
                 grid-template-columns: 1fr;
             }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            input, select, button {
+                width: 100%;
+            }
+
+            .qty-input {
+                width: 100%;
+            }
+            
+            .footer {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A5;
+                margin: 0.5cm;
+            }
+            
+            body {
+                padding: 0 !important;
+                margin: 0 !important;
+                min-height: auto !important;
+                background: white !important;
+                font-size: 12pt;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                border-radius: 0 !important;
+                border-top: none !important;
+            }
+            
+            .qty-input {
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+                width: auto !important;
+                -webkit-appearance: none;
+                -moz-appearance: textfield;
+                appearance: none;
+            }
+            
+            .delete-btn, .no-print {
+                display: none !important;
+            }
+            
+            .controls,
+            button {
+                display: none !important;
+            }
+            
+            tfoot td {
+                background: transparent !important;
+                color: #000 !important;
+                border-top: 2px solid #000;
+            }
+            
+            .info-section {
+                padding: 0.5rem;
+                margin-bottom: 1rem;
+                box-shadow: none !important;
+            }
+            
+            .header {
+                margin-bottom: 1rem;
+                box-shadow: none !important;
+            }
+            
+            .tabs, .footer {
+                display: none !important;
+            }
+        }
+        
+        .signature-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed var(--gray);
+        }
+        
+        .signature-box {
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .signature-line {
+            width: 250px;
+            height: 1px;
+            background: var(--dark);
+            margin: 1rem 0;
+        }
+        
+        #cd {
+            font-size: 10px;
+            color: #64748b;
+            text-align: center;
+            margin-top: 2rem;
+            display: block;
+        }
+        
+        .amount-in-words {
+            font-style: italic;
+            padding: 0.5rem;
+            background: #f1f5f9;
+            border-radius: var(--border-radius);
+            margin-top: 0.5rem;
+        }
+        
+        .doctor-title {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .print-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>NIGHTANGLE DIAGNOSTIC LAB</h1>
-            <p>Advanced Diagnostic Solutions</p>
+            <div class="header-content">
+                <h1>NIGHTANGLE DIAGNOSTIC LAB</h1>
+                <p>Professional Doctor Consultation Billing System</p>
+            </div>
+            <div class="logo">
+                <i class="fas fa-user-md"></i>
+                <div class="logo-text">Consultation</div>
+            </div>
         </div>
 
-        <div class="main-wrapper">
-            <div class="form-section">
-                <h2 class="form-title">New Entry</h2>
-                <form id="invoiceForm">
-                    <div class="input-group">
-                        <input type="text" id="invoiceNumber" placeholder="Invoice Number" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" id="security" placeholder="Security Code" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="number" id="amount" placeholder="Amount" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" id="labId" placeholder="Lab ID" required>
-                    </div>
-                    <button type="submit">Add Record</button>
-                </form>
+        <div class="info-section">
+            <div class="info-group">
+                <label for="invoiceDate">Invoice Date</label>
+                <input type="date" id="invoiceDate">
+            </div>
+            <div class="info-group">
+                <label for="invoiceNumber">Invoice Number</label>
+                <input type="text" id="invoiceNumber" placeholder="INV-001" value="INV-001">
+            </div>
+            <div class="info-group">
+                <label for="invoiceTitle">Consulting Doctor</label>
+                <select id="invoiceTitle">
+                    <option value="Dr. Gourab Mitra - MBBS.BCS.MD (C). (Radiology & Imaging)">Dr. Gourab Mitra</option>
+                    <option value="Dr. Meghla Majumder - MBBS.DMRD (C).PGT (Radiology & Imaging)">Dr. Meghla Majumder</option>
+                    <option value="Dr. Quasar Iqbal - MBBS.DMU.PGT (Medicine)">Dr. Quasar Iqbal</option>
+                    <option value="Dr. Pragga Devi - MBBS.CMU (Ultra).DMU (Ultra)">Dr. Pragga Devi</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="invoice">Consultation Invoice</div>
+            <div class="tab" data-tab="doctors">Manage Doctors</div>
+            <div class="tab" data-tab="services">Manage Services</div>
+        </div>
+
+        <div class="tab-content active" id="invoice-tab">
+            <div class="controls">
+                <div class="input-group">
+                    <select id="usgSelect">
+                        <option value="770">Ultrasound TVS/DOPPLER/ANOMALY/SCROTUM</option>
+                        <option value="560">Ultrasound BREAST/THYROID</option>
+                        <option value="380">Ultrasound KUB</option>
+                        <option value="450">Ultrasound Whole Abdomen</option>
+                        <option value="420">Ultrasound HBS</option>
+                        <option value="350">Ultrasound Lower Abdomen</option>
+                        <option value="700">Ultrasound NECK</option>
+                        <option value="560">Ultrasound Whole Abdomen (1600)</option>
+                        <option value="450">Ultrasound KUB (1300)</option>
+                        <option value="870">DUPLEX STUDY OF LOWER LIMB</option>
+                    </select>
+                    <input type="number" id="quantity" min="1" value="1" placeholder="Quantity">
+                </div>
+                <button onclick="addToTable()">
+                    <i class="fas fa-plus"></i> Add Service
+                </button>
             </div>
 
-            <div class="table-section">
-                <div class="print-header">
-                    <h3>PATHOLOGY BILLINGS</h3>
-                </div>
-                <table class="data-table">
+            <div class="table-container">
+                <table id="invoiceTable">
                     <thead>
                         <tr>
-                            <th>Invoice No</th>
-                            <th>Security</th>
-                            <th>Amount</th>
-                            <th>Lab ID</th>
+                            <th>Consultation Service</th>
+                            <th>Qty</th>
+                            <th>Unit Price (Tk)</th>
+                            <th>Total (Tk)</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody">
-                    </tbody>
-                    <tfoot id="totalRow">
+                    <tbody id="tableBody"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2">Total Quantity: <span id="totalQty">0</span></td>
+                            <td colspan="3">Grand Total: Tk <span id="grandTotal">0</span></td>
+                        </tr>
                     </tfoot>
                 </table>
-                <div style="margin-top: 1.5rem;">
-                    <button onclick="window.print()" style="background: #27ae60;">Print Report</button>
+            </div>
+            
+            <div class="amount-in-words">
+                <strong>Amount in words:</strong> <span id="amountWords">Zero Taka</span>
+            </div>
+            
+            <div class="signature-section">
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <strong>Authorized Signature</strong>
+                    <p>Nightangle Diagnostic Lab</p>
+                </div>
+            </div>
+
+            <div class="footer">
+                <button class="btn-danger" onclick="resetInvoice()">
+                    <i class="fas fa-trash"></i> Reset Invoice
+                </button>
+                <button class="btn-success" onclick="printInvoice()">
+                    <i class="fas fa-print"></i> Print Invoice
+                </button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="doctors-tab">
+            <div class="controls">
+                <div class="input-group">
+                    <input type="text" id="newDoctorName" placeholder="Enter doctor's full name (e.g., Dr. John Smith)">
+                    <input type="text" id="newDoctorTitle" placeholder="Enter doctor's qualifications">
+                </div>
+                <button class="btn-success" onclick="addNewDoctor()">
+                    <i class="fas fa-user-plus"></i> Add Doctor
+                </button>
+            </div>
+            
+            <div class="doctor-list" id="doctorList">
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-title">Dr. Gourab Mitra</div>
+                        <div>MBBS.BCS.MD (C). (Radiology & Imaging)</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-warning" onclick="editDoctor(this)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-danger" onclick="deleteDoctor(this)"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-title">Dr. Meghla Majumder</div>
+                        <div>MBBS.DMRD (C).PGT (Radiology & Imaging)</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-warning" onclick="editDoctor(this)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-danger" onclick="deleteDoctor(this)"><i class="fas fa-trash"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div class="tab-content" id="services-tab">
+            <div class="controls">
+                <div class="input-group">
+                    <input type="text" id="newServiceName" placeholder="Enter service name">
+                    <input type="number" id="newServicePrice" placeholder="Enter price (Tk)" min="0">
+                </div>
+                <button class="btn-success" onclick="addNewService()">
+                    <i class="fas fa-plus-circle"></i> Add Service
+                </button>
+            </div>
+            
+            <div class="service-list" id="serviceList">
+                <div class="service-item">
+                    <div>
+                        <strong>Ultrasound TVS/DOPPLER/ANOMALY/SCROTUM</strong>
+                        <div>Tk 770</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-warning" onclick="editService(this)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-danger" onclick="deleteService(this)"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="service-item">
+                    <div>
+                        <strong>Ultrasound BREAST/THYROID</strong>
+                        <div>Tk 560</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-warning" onclick="editService(this)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-danger" onclick="deleteService(this)"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <code id="cd">Professional Doctor Consultation Billing System | Developed by Mizanur Rahman</code>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i> Operation completed successfully!
     </div>
 
     <script>
-        let totalAmount = 0;
+        // Initialize date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            document.getElementById('invoiceDate').value = formattedDate;
+            
+            // Set initial invoice number
+            document.getElementById('invoiceNumber').value = 'INV-' + (Math.floor(Math.random() * 1000) + 1000);
+            
+            // Initialize services and doctors
+            updateGrandTotal();
+        });
         
-        document.getElementById('invoiceForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Show the corresponding tab content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // Show notification
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.innerHTML = `<i class="fas fa-${isError ? 'exclamation-triangle' : 'check-circle'}"></i> ${message}`;
+            notification.classList.remove('error');
             
-            const invoiceNumber = document.getElementById('invoiceNumber').value;
-            const security = document.getElementById('security').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const labId = document.getElementById('labId').value;
-
-            // Add to table with animation
-            const tableBody = document.getElementById('tableBody');
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${invoiceNumber}</td>
-                <td>${security}</td>
-                <td>${Math.round(amount)}</td>
-                <td>${labId}</td>
-            `;
-            newRow.style.opacity = '0';
-            tableBody.appendChild(newRow);
+            if (isError) {
+                notification.classList.add('error');
+            }
             
-            // Fade-in animation
+            notification.classList.add('show');
+            
             setTimeout(() => {
-                newRow.style.transition = 'opacity 0.3s ease';
-                newRow.style.opacity = '1';
-            }, 10);
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Doctor management functions
+        function addNewDoctor() {
+            const name = document.getElementById('newDoctorName').value.trim();
+            const title = document.getElementById('newDoctorTitle').value.trim();
+            
+            if (!name || !title) {
+                showNotification('Please fill in both fields', true);
+                return;
+            }
+            
+            // Ensure doctor name starts with "Dr. "
+            const formattedName = name.startsWith('Dr. ') ? name : 'Dr. ' + name;
+            
+            const fullName = `${formattedName} - ${title}`;
+            const select = document.getElementById('invoiceTitle');
+            const option = document.createElement('option');
+            option.value = fullName;
+            option.textContent = formattedName;
+            select.appendChild(option);
+            
+            // Add to doctor list
+            const doctorList = document.getElementById('doctorList');
+            const doctorItem = document.createElement('div');
+            doctorItem.className = 'doctor-item';
+            doctorItem.innerHTML = `
+                <div>
+                    <div class="doctor-title">${formattedName}</div>
+                    <div>${title}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="btn-warning" onclick="editDoctor(this)"><i class="fas fa-edit"></i></button>
+                    <button class="btn-danger" onclick="deleteDoctor(this)"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+            doctorList.appendChild(doctorItem);
+            
+            // Clear inputs
+            document.getElementById('newDoctorName').value = '';
+            document.getElementById('newDoctorTitle').value = '';
+            
+            showNotification('Doctor added successfully!');
+        }
+        
+        function deleteDoctor(button) {
+            const doctorItem = button.closest('.doctor-item');
+            const doctorName = doctorItem.querySelector('.doctor-title').textContent;
+            
+            if (confirm(`Are you sure you want to delete ${doctorName}?`)) {
+                // Remove from dropdown
+                const select = document.getElementById('invoiceTitle');
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].textContent === doctorName) {
+                        select.remove(i);
+                        break;
+                    }
+                }
+                
+                // Remove from list
+                doctorItem.remove();
+                showNotification('Doctor deleted successfully!');
+            }
+        }
+        
+        function editDoctor(button) {
+            const doctorItem = button.closest('.doctor-item');
+            const doctorName = doctorItem.querySelector('.doctor-title').textContent;
+            const doctorTitle = doctorItem.querySelector('div > div:not(.doctor-title)').textContent;
+            
+            document.getElementById('newDoctorName').value = doctorName;
+            document.getElementById('newDoctorTitle').value = doctorTitle;
+            
+            // Delete the old entry
+            deleteDoctor(button);
+            
+            showNotification('Edit the doctor details and click "Add Doctor" to save');
+        }
+        
+        // Service management functions
+        function addNewService() {
+            const name = document.getElementById('newServiceName').value.trim();
+            const price = document.getElementById('newServicePrice').value;
+            
+            if (!name || !price) {
+                showNotification('Please fill in both fields', true);
+                return;
+            }
+            
+            const select = document.getElementById('usgSelect');
+            const option = document.createElement('option');
+            option.value = price;
+            option.textContent = name;
+            select.appendChild(option);
+            
+            // Add to service list
+            const serviceList = document.getElementById('serviceList');
+            const serviceItem = document.createElement('div');
+            serviceItem.className = 'service-item';
+            serviceItem.innerHTML = `
+                <div>
+                    <strong>${name}</strong>
+                    <div>Tk ${price}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="btn-warning" onclick="editService(this)"><i class="fas fa-edit"></i></button>
+                    <button class="btn-danger" onclick="deleteService(this)"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+            serviceList.appendChild(serviceItem);
+            
+            // Clear inputs
+            document.getElementById('newServiceName').value = '';
+            document.getElementById('newServicePrice').value = '';
+            
+            showNotification('Service added successfully!');
+        }
+        
+        function deleteService(button) {
+            const serviceItem = button.closest('.service-item');
+            const serviceName = serviceItem.querySelector('strong').textContent;
+            
+            if (confirm(`Are you sure you want to delete "${serviceName}"?`)) {
+                // Remove from dropdown
+                const select = document.getElementById('usgSelect');
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].textContent === serviceName) {
+                        select.remove(i);
+                        break;
+                    }
+                }
+                
+                // Remove from list
+                serviceItem.remove();
+                showNotification('Service deleted successfully!');
+            }
+        }
+        
+        function editService(button) {
+            const serviceItem = button.closest('.service-item');
+            const serviceName = serviceItem.querySelector('strong').textContent;
+            const servicePrice = serviceItem.querySelector('div > div').textContent.replace('Tk ', '');
+            
+            document.getElementById('newServiceName').value = serviceName;
+            document.getElementById('newServicePrice').value = servicePrice;
+            
+            // Delete the old entry
+            deleteService(button);
+            
+            showNotification('Edit the service details and click "Add Service" to save');
+        }
+        
+        // Convert number to words for amount display
+        function numberToWords(num) {
+            const units = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+            const teens = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+            const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+            
+            if (num === 0) return 'Zero Taka';
+            
+            function convertHundreds(n) {
+                if (n > 99) {
+                    return units[Math.floor(n / 100)] + ' Hundred ' + convertTens(n % 100);
+                } else {
+                    return convertTens(n);
+                }
+            }
+            
+            function convertTens(n) {
+                if (n < 10) return units[n];
+                if (n >= 10 && n < 20) return teens[n - 10];
+                return tens[Math.floor(n / 10)] + ' ' + units[n % 10];
+            }
+            
+            return convertHundreds(num) + ' Taka Only';
+        }
+        
+        // Update amount in words
+        function updateAmountWords(amount) {
+            document.getElementById('amountWords').textContent = numberToWords(amount);
+        }
+        
+        // Invoice functions
+        function addToTable() {
+            const select = document.getElementById("usgSelect");
+            const quantity = document.getElementById("quantity");
+            const tableBody = document.getElementById("tableBody");
+            
+            if (!select.value) {
+                showNotification('Please select a service first', true);
+                return;
+            }
+            
+            const itemName = select.options[select.selectedIndex].text;
+            const unitPrice = parseInt(select.value);
+            const initialQty = parseInt(quantity.value) || 1;
+            const totalPrice = unitPrice * initialQty;
 
-            // Update total
-            totalAmount += amount;
-            document.getElementById('totalRow').innerHTML = `
-                <tr class="total-row">
-                    <td colspan="2">Total Amount</td>
-                    <td>${Math.round(totalAmount)}</td>
-                    <td></td>
-                </tr>
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td>${itemName}</td>
+                <td>
+                    <input type="number" min="1" value="${initialQty}" 
+                        class="qty-input" 
+                        onchange="updateRowTotal(this)">
+                </td>
+                <td>Tk ${unitPrice}</td>
+                <td>Tk ${totalPrice}</td>
+                <td class="action-btn">
+                    <button class="delete-btn btn-danger" onclick="deleteRow(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
             `;
 
-            // Save data to server
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "save_data.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.send(`invoiceNumber=${invoiceNumber}&security=${security}&amount=${amount}&labId=${labId}`);
+            tableBody.appendChild(newRow);
+            updateGrandTotal();
+            quantity.value = 1;
+            
+            showNotification('Service added to invoice');
+        }
 
-            // Clear form with animation
-            document.getElementById('invoiceForm').reset();
-            document.getElementById('invoiceNumber').focus();
+        function updateRowTotal(input) {
+            const row = input.closest('tr');
+            const unitPrice = parseInt(row.cells[2].textContent.replace('Tk ', ''));
+            const newQty = parseInt(input.value) || 1;
+            const totalCell = row.cells[3];
+            totalCell.textContent = 'Tk ' + (unitPrice * newQty);
+            updateGrandTotal();
+        }
+
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+            updateGrandTotal();
+            showNotification('Service removed');
+        }
+
+        function updateGrandTotal() {
+            const rows = document.querySelectorAll("#tableBody tr");
+            let grandTotal = 0;
+            let totalQty = 0;
+
+            rows.forEach(row => {
+                const qtyInput = row.querySelector('.qty-input');
+                const total = parseInt(row.cells[3].textContent.replace('Tk ', ''));
+                totalQty += parseInt(qtyInput.value) || 0;
+                grandTotal += total;
+            });
+
+            document.getElementById("grandTotal").textContent = grandTotal;
+            document.getElementById("totalQty").textContent = totalQty;
+            updateAmountWords(grandTotal);
+        }
+        
+        function resetInvoice() {
+            if (confirm('Are you sure you want to clear the current invoice?')) {
+                document.getElementById("tableBody").innerHTML = '';
+                updateGrandTotal();
+                showNotification('Invoice cleared');
+                
+                // Generate new invoice number
+                document.getElementById('invoiceNumber').value = 'INV-' + (Math.floor(Math.random() * 1000) + 1000);
+            }
+        }
+
+        function printInvoice() {
+            const titleSelect = document.getElementById("invoiceTitle");
+            const doctorValue = titleSelect.value;
+            const doctorName = doctorValue.split(' - ')[0] || doctorValue;
+            const date = document.getElementById("invoiceDate").value;
+            const invoiceNumber = document.getElementById("invoiceNumber").value;
+            const grandTotal = document.getElementById("grandTotal").textContent;
+            
+            const printWindow = window.open('', '_blank');
+            
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Consultation Invoice - ${invoiceNumber}</title>
+                        <style>
+                            @page {
+                                size: A5;
+                                margin-top: 1cm;
+                            }
+                            body {
+                                font-family: Arial, sans-serif;
+                                padding: 2cm 1rem 1rem !important;
+                                margin: 0 !important;
+                                font-size: 12pt;
+                            }
+                            .invoice-header {
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                right: 0;
+                                text-align: center;
+                                padding: 0.5rem 0;
+                                background: white;
+                            }
+                            .invoice-header h2 {
+                                margin: 0;
+                                font-size: 1.8rem;
+                                color: #2563eb;
+                                padding-bottom: 0.5rem;
+                            }
+                            .invoice-info {
+                                position: fixed;
+                                top: 3.5cm;
+                                left: 0;
+                                right: 0;
+                                padding: 0.5rem 1rem;
+                                display: flex;
+                                justify-content: space-between;
+                                background: #f1f5f9;
+                                font-size: 0.9rem;
+                            }
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                font-size: 12pt;
+                                margin-top: 1cm;
+                            }
+                            th, td {
+                                padding: 8px;
+                                text-align: left;
+                                border-bottom: 1px solid #ddd;
+                            }
+                            th {
+                                background-color: #3b82f6 !important;
+                                color: white !important;
+                            }
+                            tfoot td {
+                                border-top: 2px solid #000;
+                                font-weight: bold;
+                            }
+                            .qty-input {
+                                border: none !important;
+                                background: transparent !important;
+                                padding: 0 !important;
+                                width: auto !important;
+                            }
+                            .no-print {
+                                display: none !important;
+                            }
+                            .amount-words {
+                                margin-top: 1rem;
+                                font-style: italic;
+                                padding: 0.5rem;
+                                background: #f1f5f9;
+                                border-radius: 4px;
+                            }
+                            .signature {
+                                margin-top: 2rem;
+                                text-align: right;
+                            }
+                            .signature-line {
+                                width: 200px;
+                                height: 1px;
+                                background: #000;
+                                margin: 20px 0 5px;
+                                display: inline-block;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="invoice-header">
+                            <h2>NIGHTANGLE DIAGNOSTIC LAB</h2>
+                            <h3>${doctorName}</h3>
+                        </div>
+                        
+                        <div class="invoice-info">
+                            <div>
+                                <div><strong>Date:</strong> ${date}</div>
+                                <div><strong>Invoice #:</strong> ${invoiceNumber}</div>
+                            </div>
+                            <div>
+                                <div><strong>Consultant:</strong> ${doctorName}</div>
+                            </div>
+                        </div>
+                        
+                        ${document.getElementById("invoiceTable").outerHTML.replace(/Tk /g, '')}
+                        
+                        <div class="amount-words">
+                            <strong>Amount in words:</strong> ${numberToWords(parseInt(grandTotal))}
+                        </div>
+                        
+                        <div class="signature">
+                            <div class="signature-line"></div>
+                            <div><strong>Authorized Signature</strong></div>
+                            <div>Nightangle Diagnostic Lab</div>
+                        </div>
+                    </body>
+                </html>
+            `);
+
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        }
+
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && document.activeElement.id === 'quantity') {
+                addToTable();
+            }
         });
     </script>
 </body>
